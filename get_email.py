@@ -2,6 +2,7 @@ import re
 import requests
 
 from list_from_exel import read_website_column
+from send_email import open_txt
 
 #  данные для подключения к файлу эксель
 file_path = "2gispars.xlsx"  # Укажите путь к вашему файлу Excel
@@ -10,7 +11,8 @@ column_name = "Веб-сайт 1"  # Укажите название столб�
 
 
 def load_email():
-    """ Функция собирает имейли и записывает их в файл output.txt"""
+    """ ОСНОВНАЯ Функция собирает имейли с урлов и записывает их в файл output.txt
+    ЗАПУСКАТЬ ЕЁ"""
     urls_all = read_website_column(file_path, sheet_name, column_name)
     email_list = []
     for url in urls_all:
@@ -22,8 +24,11 @@ def load_email():
                     email_list.append(email)  # добавляем имей в готовый список
 
     with open('output.txt', 'w') as file:
+        file.truncate(0)
         for item in email_list:
             file.write(str(item) + '\n')
+
+    open_txt()
 
     return print('Operation complete, check file output.txt')
 
@@ -53,3 +58,6 @@ def find_emails_on_website(url):
         print(f"Произошла ошибка на сайте {url} при обращении к сайту: {e}")
         print('Рекомендуем удалить сайт из поиска')
         return []
+
+
+load_email()
